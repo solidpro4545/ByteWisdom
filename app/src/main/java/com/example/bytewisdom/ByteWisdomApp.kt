@@ -40,11 +40,13 @@ fun ByteWisdomApp(app: Application) {
                     quoteState = quoteVm.quoteState,
                     onGetTodayQuote = { quoteVm.loadTodayQuote() },
                     onForceNewQuote = { quoteVm.forceNewQuote() },
+                    onZenRandom = { quoteVm.fetchZenRandom() },   // 👈 NEW
                     onSignOut = {
                         authVm.signOut()
-                        quoteVm.clearQuote() // reset quote state so it stays hidden next login
+                        quoteVm.clearQuote()
                     }
                 )
+
             }
         }
     }

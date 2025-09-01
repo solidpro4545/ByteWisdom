@@ -11,6 +11,19 @@ Passwords are protected using **PBKDF2 with SHA-256** and unique salts for each 
 
 ---
 
+## 📋 Requirements
+
+Before building the project, ensure you have:
+
+- **Android Studio Ladybug+** (2024.1 or newer recommended)  
+- **Gradle Wrapper** (bundled with project)  
+- **JDK 17** (required for Room + Compose + kapt)  
+  - Configure in Android Studio:  
+    **File → Settings → Build, Execution, Deployment → Build Tools → Gradle → Gradle JDK → Select JDK 17**  
+- Android Emulator or physical device running **Android 8.0 (API 26)** or higher  
+
+---
+
 ## ✨ Features
 
 - **Authentication**
@@ -57,3 +70,15 @@ Passwords are protected using **PBKDF2 with SHA-256** and unique salts for each 
    ```bash
    git clone https://github.com/<your-username>/ByteWisdom.git
    cd ByteWisdom
+2. Open the project in Android Studio (Ladybug+ recommended).
+
+3. 🔧 Set Gradle JDK to 17
+
+In Android Studio go to:
+File → Settings → Build, Execution, Deployment → Build Tools → Gradle
+
+Under Gradle JDK, select 17 (Oracle OpenJDK or Temurin)
+
+Keep Distribution as Wrapper
+
+4. Sync Gradle and run the app on an emulator or device.

@@ -1,7 +1,17 @@
 package com.example.bytewisdom.ui.screens
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -20,24 +30,27 @@ fun HomeScreen(
     quoteState: LiveData<QuoteViewModel.UiState>,
     onGetTodayQuote: () -> Unit,
     onForceNewQuote: () -> Unit,
-    onZenRandom: () -> Unit,          // already here ✅
+    onZenRandom: () -> Unit,
     onSignOut: () -> Unit
 ) {
     val state by quoteState.observeAsState(initial = QuoteViewModel.UiState())
     val snackbarHostState = remember { SnackbarHostState() }
 
-
     Scaffold(
         topBar = {
-            SmallTopAppBar(
+            CenterAlignedTopAppBar(
                 title = { Text("Welcome, ${usernameProvider()}") },
-                actions = { TextButton(onClick = onSignOut) { Text("Sign out") } }
+                actions = {
+                    TextButton(onClick = onSignOut) {
+                        Text("Sign out")
+                    }
+                }
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { inner ->
         Column(
-            Modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(inner)
                 .padding(20.dp),
@@ -54,23 +67,30 @@ fun HomeScreen(
             state.localQuote?.let { localQuote ->
                 QuoteCard(localQuote, state.date ?: "")
 
-                // 🔹 put both actions side-by-side
-                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     OutlinedButton(onClick = onForceNewQuote) { Text("New random quote") }
-                    OutlinedButton(onClick = onZenRandom)     { Text("Random from ZenQuotes") }
+                    OutlinedButton(onClick = onZenRandom) { Text("Random from ZenQuotes") }
                 }
             }
 
-            // ZenQuotes card (if available)
             // ZenQuotes (Today)
             state.zenQuoteToday?.let { zen ->
-                Text(text = "From ZenQuotes (Today):", style = MaterialTheme.typography.labelLarge)
+                Text(
+                    text = "From ZenQuotes (Today):",
+                    style = MaterialTheme.typography.labelLarge
+                )
                 QuoteCard(zen, state.date ?: "")
             }
 
-// ZenQuotes (Random)
+            // ZenQuotes (Random)
             state.zenQuoteRandom?.let { zen ->
-                Text(text = "From ZenQuotes (Random):", style = MaterialTheme.typography.labelLarge)
+                Text(
+                    text = "From ZenQuotes (Random):",
+                    style = MaterialTheme.typography.labelLarge
+                )
                 QuoteCard(zen, state.date ?: "")
             }
         }

@@ -12,12 +12,15 @@ import androidx.navigation.compose.rememberNavController
 import com.example.bytewisdom.nav.Route
 import com.example.bytewisdom.ui.screens.HomeScreen
 import com.example.bytewisdom.ui.screens.SignInScreen
+import com.example.bytewisdom.ui.screens.RegisterScreen
 import com.example.bytewisdom.viewmodel.AuthViewModel
 import com.example.bytewisdom.viewmodel.QuoteViewModel
 
 @Composable
 fun ByteWisdomApp(app: Application) {
     val nav = rememberNavController()
+
+    // Keep your existing factories
     val authVm: AuthViewModel = viewModel(factory = AuthViewModel.Factory)
     val quoteVm: QuoteViewModel = viewModel(factory = QuoteViewModel.factory(app))
 
@@ -31,22 +34,38 @@ fun ByteWisdomApp(app: Application) {
 
     MaterialTheme {
         NavHost(navController = nav, startDestination = Route.SignIn.route) {
+
+            // SIGN IN
             composable(Route.SignIn.route) {
-                SignInScreen(onSignIn = { name -> authVm.signIn(name) })
+                SignInScreen(
+                    onSignIn = { username, password -> authVm.login(username, password) },
+                    onNavigateRegister = { nav.navigate("register") },
+                    errorText = authVm.error.value
+                )
             }
+
+            // REGISTER
+            composable("register") {
+                RegisterScreen(
+                    onRegister = { username, password -> authVm.register(username, password) },
+                    onNavigateBack = { nav.popBackStack() },
+                    errorText = authVm.error.value
+                )
+            }
+
+            // HOME
             composable(Route.Home.route) {
                 HomeScreen(
                     usernameProvider = { authVm.username.value.ifBlank { "Friend" } },
                     quoteState = quoteVm.quoteState,
                     onGetTodayQuote = { quoteVm.loadTodayQuote() },
                     onForceNewQuote = { quoteVm.forceNewQuote() },
-                    onZenRandom = { quoteVm.fetchZenRandom() },   // 👈 NEW
+                    onZenRandom = { quoteVm.fetchZenRandom() },
                     onSignOut = {
                         authVm.signOut()
                         quoteVm.clearQuote()
                     }
                 )
-
             }
         }
     }

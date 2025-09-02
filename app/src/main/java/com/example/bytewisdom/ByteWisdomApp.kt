@@ -1,15 +1,10 @@
 package com.example.bytewisdom
 
 import android.app.Application
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import com.example.bytewisdom.ui.theme.LightBlueTransparent
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -38,45 +33,39 @@ fun ByteWisdomApp(app: Application) {
     }
 
     MaterialTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(LightBlueTransparent)
-        ) {
-            NavHost(navController = nav, startDestination = Route.SignIn.route) {
+        NavHost(navController = nav, startDestination = Route.SignIn.route) {
 
-                // SIGN IN
-                composable(Route.SignIn.route) {
-                    SignInScreen(
-                        onSignIn = { username, password -> authVm.login(username, password) },
-                        onNavigateRegister = { nav.navigate("register") },
-                        errorText = authVm.error.value
-                    )
-                }
+            // SIGN IN
+            composable(Route.SignIn.route) {
+                SignInScreen(
+                    onSignIn = { username, password -> authVm.login(username, password) },
+                    onNavigateRegister = { nav.navigate("register") },
+                    errorText = authVm.error.value
+                )
+            }
 
-                // REGISTER
-                composable("register") {
-                    RegisterScreen(
-                        onRegister = { username, password -> authVm.register(username, password) },
-                        onNavigateBack = { nav.popBackStack() },
-                        errorText = authVm.error.value
-                    )
-                }
+            // REGISTER
+            composable("register") {
+                RegisterScreen(
+                    onRegister = { username, password -> authVm.register(username, password) },
+                    onNavigateBack = { nav.popBackStack() },
+                    errorText = authVm.error.value
+                )
+            }
 
-                // HOME
-                composable(Route.Home.route) {
-                    HomeScreen(
-                        usernameProvider = { authVm.username.value.ifBlank { "Friend" } },
-                        quoteState = quoteVm.quoteState,
-                        onGetTodayQuote = { quoteVm.loadTodayQuote() },
-                        onForceNewQuote = { quoteVm.forceNewQuote() },
-                        onZenRandom = { quoteVm.fetchZenRandom() },
-                        onSignOut = {
-                            authVm.signOut()
-                            quoteVm.clearQuote()
-                        }
-                    )
-                }
+            // HOME
+            composable(Route.Home.route) {
+                HomeScreen(
+                    usernameProvider = { authVm.username.value.ifBlank { "Friend" } },
+                    quoteState = quoteVm.quoteState,
+                    onGetTodayQuote = { quoteVm.loadTodayQuote() },
+                    onForceNewQuote = { quoteVm.forceNewQuote() },
+                    onZenRandom = { quoteVm.fetchZenRandom() },
+                    onSignOut = {
+                        authVm.signOut()
+                        quoteVm.clearQuote()
+                    }
+                )
             }
         }
     }
